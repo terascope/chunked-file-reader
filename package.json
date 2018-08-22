@@ -5,8 +5,16 @@
   "repository": "https://github.com/terascope/chunked-file-reader.git",
   "author": "Zach Burnham <zburnham@terascope.io>",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint asset/**/*.js",
+    "lint:fix": "eslint --fix *.js lib/**/*.js",
+    "test": "nyc -x spec/ --reporter=text-summary jasmine; nyc report --reporter=html",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"
+  },
   "dependencies": {
     "bluebird": "^3.5.1",
-    "eslint-config-airbnb-base": "^13.1.0"
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
