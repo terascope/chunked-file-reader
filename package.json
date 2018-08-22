@@ -9,10 +9,24 @@
     "access": "public"
   },
   "scripts": {
-    "lint": "eslint *.js test",
-    "lint:fix": "eslint --fix *.js test",
-    "test": "jasmine",
+    "lint": "eslint *.js spec lib",
+    "lint:fix": "eslint --fix *.js spec lib",
+    "test": "nyc -x spec/ --reporter=text-summary jasmine && nyc report --reporter=html",
     "report-coverage": "nyc report --reporter=text-lcov > coverage/coverage.lcov && codecov"
+  },
+  "nyc": {
+    "cache": true,
+    "all": true,
+    "include": [
+      "*.js",
+      "lib/*.js"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcov",
+      "json"
+    ]
   },
   "dependencies": {
     "bluebird": "^3.5.1"
