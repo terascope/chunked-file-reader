@@ -29,6 +29,7 @@ function getChunk(readerClient, slice, opConfig, logger) {
 
     return readerClient(slice.offset, slice.length)
         .then((data) => {
+            console.log('DATA:', data);
             const finalChar = data[data.length - 1];
             // Skip the margin if the raw data ends with a newline since it will end with a complete
             // record

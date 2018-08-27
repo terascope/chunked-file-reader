@@ -94,4 +94,36 @@ describe('The chunked file reader', () => {
         const avgSize = chunkedFileReader._averageRecordSize(testData);
         expect(avgSize).toEqual(16);
     });
+    describe('as a slicer would use it', () => {
+        fit('properly handles partial records.', (done) => {
+            const chunks = [
+                '{"test1":"',
+                'data"}\n{"t',
+                '"est2":"da',
+                'ta"}\n',
+            ];
+            function reader(offset, length) {
+                return new Promise(resolve => resolve(chunks.shift()));
+            }
+            const slices = [
+                { offset: 0, length: 10, total: 35 },
+                { offset: 10, length: 10, total: 35 },
+                { offset: 20, length: 10, total: 35 },
+                { offset: 30, length: 5, total: 35 },
+            ];
+            const records = [];
+            slices.forEach((slice) => {
+                chunkedFileReader.getChunk(reader, slice, opConfig, mockLogger)
+                    .then(rec => {
+                        console.log('RECORD:', rec);
+                        records.push(rec);
+                    });
+            });
+            console.log('RECORDS:', records);
+            expect(records.length).toEqual(2);
+            expect(records[0]).toEqual('{"test1":"data"}');
+            expect(records[1]).toEqual('{"test2":"data"}');
+            done();
+        });
+    });
 });
