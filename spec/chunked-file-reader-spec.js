@@ -22,6 +22,8 @@ function mockReader(offset) {
     case 20:
         // End slice with partial record at start
         return new Promise(resolve => resolve('{"test6": "data"}\r\n\f{"test7": "data"}\r\n\f{"test8": "data"}\r\n\f'));
+    case 100:
+        return new Promise(resolve => resolve('\r\n\f{"test4": "data"}\r\n\f{"test5": data}\r\n\f{"test6": "data"}\r\n\f'));
     default:
         return new Error('bad offset!!');
     }
@@ -30,6 +32,13 @@ function mockReader(offset) {
 const opConfig = {
     delimiter: '\r\n\f',
     format: 'json'
+};
+
+// Test where one record is invalid JSON
+const funkySlice = {
+    offset: 100,
+    length: 5,
+    total: 30
 };
 
 // This will test both a starting slice and the margin collection
@@ -68,6 +77,13 @@ const testData = [
 
 
 describe('The chunked file reader', () => {
+    it('does not let one bad record spoil the bunch', (done) => {
+        chunkedFileReader.getChunk(mockReader, funkySlice, opConfig, mockLogger)
+            .then((data) => {
+                expect(data).toEqual([{ test4: 'data' }, { test6: 'data' }]);
+                done();
+            });
+    });
     it('supports optional formatting/parsing', (done) => {
         chunkedFileReader.getChunk(mockReader, startSlice, { ...opConfig, format: 'pass' }, mockLogger)
             .then((data) => {
