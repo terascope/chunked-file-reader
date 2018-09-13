@@ -68,6 +68,13 @@ const testData = [
 
 
 describe('The chunked file reader', () => {
+    it('supports optional formatting/parsing', (done) => {
+        chunkedFileReader.getChunk(mockReader, startSlice, { ...opConfig, format: 'pass' }, mockLogger)
+            .then((data) => {
+                expect(data).toEqual(['{"test1": "data"}', '{"test2": "data"}', '{"test3": "data"}']);
+                done();
+            });
+    });
     it('properly handles a start slice and margin collection.', (done) => {
         chunkedFileReader.getChunk(mockReader, startSlice, opConfig, mockLogger)
             .then((data) => {
