@@ -29,10 +29,10 @@ function getChunk(readerClient, slice, opConfig, logger) {
 
     return readerClient(slice.offset, slice.length)
         .then((data) => {
-            const finalChar = data[data.length - 1];
+            const finalChar = data.slice(-opConfig.delimiter.length);
             // Skip the margin if the raw data ends with a newline since it will end with a complete
             // record
-            if (finalChar === '\n') {
+            if (finalChar === opConfig.delimiter) {
                 needMargin = false;
             }
             if (needMargin) {
@@ -64,8 +64,8 @@ function _cleanData(rawData, slice, opConfig) {
     let outputData = rawData;
     // Get rid of last character if it is the delimiter since that will just result in an empty
     // record
-    if (rawData[rawData.length - 1] === opConfig.delimiter) {
-        outputData = rawData.substring(0, rawData.length - 1);
+    if (rawData.slice(-opConfig.delimiter.length) === opConfig.delimiter) {
+        outputData = rawData.slice(0, -opConfig.delimiter.length);
     }
 
     if (slice.offset === 0) {

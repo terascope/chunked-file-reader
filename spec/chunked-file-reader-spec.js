@@ -12,23 +12,23 @@ function mockReader(offset) {
     switch (offset) {
     case 0:
         // Start slice
-        return new Promise(resolve => resolve('{"test1": "data"}\n{"test2": "data"}\n{"test3": "data"'));
+        return new Promise(resolve => resolve('{"test1": "data"}\r\n\f{"test2": "data"}\r\n\f{"test3": "data"'));
     case 5:
         // Margin for start slice
-        return new Promise(resolve => resolve('}\n{"test4": "data"}\n'));
+        return new Promise(resolve => resolve('}\r\n\f{"test4": "data"}\r\n\f'));
     case 10:
         // middle slice ending with complete record
-        return new Promise(resolve => resolve('\n{"test4": "data"}\n{"test5": "data"}\n{"test6": "data"}\n'));
+        return new Promise(resolve => resolve('\r\n\f{"test4": "data"}\r\n\f{"test5": "data"}\r\n\f{"test6": "data"}\r\n\f'));
     case 20:
         // End slice with partial record at start
-        return new Promise(resolve => resolve('{"test6": "data"}\n{"test7": "data"}\n{"test8": "data"}\n'));
+        return new Promise(resolve => resolve('{"test6": "data"}\r\n\f{"test7": "data"}\r\n\f{"test8": "data"}\r\n\f'));
     default:
         return new Error('bad offset!!');
     }
 }
 
 const opConfig = {
-    delimiter: '\n',
+    delimiter: '\r\n\f',
     format: 'json'
 };
 
