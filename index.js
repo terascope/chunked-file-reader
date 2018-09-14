@@ -33,9 +33,8 @@ function getOffsets(size, total, delimiter) {
 }
 
 
-// This function will grab the chunk of data specified by the slice plus an extra margin if the
-// slice is not at the end of the file. It needs to read the file twice, first grabbing the data
-// specified in the slice and then the margin, which gets appended to the data
+// This function will grab the chunk of data specified by the slice plus an
+// extra margin if the slice does not end with the delimiter.
 function getChunk(readerClient, slice, opConfig, logger) {
     const { delimiter } = opConfig;
 
@@ -43,7 +42,13 @@ function getChunk(readerClient, slice, opConfig, logger) {
         let margin = '';
         return new Promise(async (resolve) => {
             while (margin.indexOf(delimiter) === -1) {
-                margin += await readerClient(offset, length); // eslint-disable-line no-await-in-loop, max-len
+                // reader clients must return false-y when nothing more to read.
+                const chunk = await readerClient(offset, length); // eslint-disable-line no-await-in-loop, max-len
+                if (!chunk) {
+                    resolve(margin.split(delimiter)[0]);
+                    return;
+                }
+                margin += chunk;
                 offset += length; // eslint-disable-line no-param-reassign, max-len
             }
             // Don't read too far - next slice will get it.

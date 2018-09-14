@@ -65,7 +65,7 @@ describe('The chunked file reader', () => {
             });
     });
     it('handles reading margin until delimiter found.', (done) => {
-        const slice = { offset: 0, length: 5, total: 30 };
+        const slice = { offset: 0, length: 5, total: 112 };
         const reader = Reader([
             '{"t1":"d"}\n{"t2":"d"}\n{"t3":"d", ',
             '"x": "abcdefghijklmnopqrstuz", ',
@@ -81,6 +81,19 @@ describe('The chunked file reader', () => {
                     z: 123456789,
                 };
                 expect(data).toEqual([{ t1: 'd' }, { t2: 'd' }, t3]);
+                done();
+            });
+    });
+    it('handles reading margin when delimiter never found.', (done) => {
+        const slice = { offset: 0, length: 5, total: 95 };
+        const reader = Reader([
+            '{"t1":"d"}\n{"t2":"d"}\n{"t3":"d", ',
+            '"x": "abcdefghijklmnopqrstuz", ',
+            '"y": "ABCDEFGHIJKLMNOPQRSTUZ", ',
+        ]);
+        getChunk(reader, slice, opConfig, logger)
+            .then((data) => {
+                expect(data).toEqual([{ t1: 'd' }, { t2: 'd' }]);
                 done();
             });
     });
