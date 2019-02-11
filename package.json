@@ -14,6 +14,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@terascope/utils": "^0.4.0",
     "bluebird": "^3.5.1"
   },
   "devDependencies": {
