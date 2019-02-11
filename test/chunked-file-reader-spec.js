@@ -46,7 +46,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '{"test1": "data"}\n{"test2": "data"}\n{"test3": "data"}\n',
         ]);
-        getChunk(reader, slice, { ...opConfig, format: 'pass' }, logger)
+        getChunk(reader, slice, { ...opConfig, format: 'raw' }, logger)
             .then((data) => {
                 expect(data).toEqual(['{"test1": "data"}', '{"test2": "data"}', '{"test3": "data"}']);
                 done();
