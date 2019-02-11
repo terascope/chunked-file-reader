@@ -41,7 +41,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '\n{"test4": "data"}\n{"test5": data}\n{"test6": "data"}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data[0].getMetadata().path).toEqual('/test/file');
                 done();
@@ -53,7 +53,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '\n{"test4": "data"}\n{"test5": data}\n{"test6": "data"}\n',
         ]);
-        getChunk(reader, slice, rawOpConfig, metadata, logger)
+        getChunk(reader, slice, rawOpConfig, logger, metadata)
             .then((data) => {
                 expect(data[0].getMetadata().path).toEqual('/test/file');
                 done();
@@ -64,7 +64,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '\n{"test4": "data"}\n{"test5": data}\n{"test6": "data"}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data).toEqual([{ test4: 'data' }, null, { test6: 'data' }]);
                 done();
@@ -87,7 +87,7 @@ describe('The chunked file reader', () => {
             '{"test1": "data"}\n{"test2": "data"}\n{"test3": "data"',
             '}\n{"test4": "data"}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data).toEqual([{ test1: 'data' }, { test2: 'data' }, { test3: 'data' }]);
                 done();
@@ -101,7 +101,7 @@ describe('The chunked file reader', () => {
             '"y": "ABCDEFGHIJKLMNOPQRSTUZ", ',
             '"z": 123456789}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 const t3 = {
                     t3: 'd',
@@ -120,7 +120,7 @@ describe('The chunked file reader', () => {
             '"x": "abcdefghijklmnopqrstuz", ',
             '"y": "ABCDEFGHIJKLMNOPQRSTUZ", ',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data).toEqual([{ t1: 'd' }, { t2: 'd' }, null]);
                 done();
@@ -131,7 +131,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '\n{"test4": "data"}\n{"test5": "data"}\n{"test6": "data"}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data).toEqual([{ test4: 'data' }, { test5: 'data' }, { test6: 'data' }]);
                 done();
@@ -142,7 +142,7 @@ describe('The chunked file reader', () => {
         const reader = Reader([
             '{"test6": "data"}\n{"test7": "data"}\n{"test8": "data"}\n',
         ]);
-        getChunk(reader, slice, jsonOpConfig, metadata, logger)
+        getChunk(reader, slice, jsonOpConfig, logger, metadata)
             .then((data) => {
                 expect(data).toEqual([{ test7: 'data' }, { test8: 'data' }]);
                 done();

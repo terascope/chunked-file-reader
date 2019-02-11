@@ -35,8 +35,7 @@ function getOffsets(size, total, delimiter) {
 
 // This function will grab the chunk of data specified by the slice plus an
 // extra margin if the slice does not end with the delimiter.
-// TODO make metadata optional
-function getChunk(readerClient, slice, opConfig, metadata, logger) {
+function getChunk(readerClient, slice, opConfig, logger, metadata) {
     const { delimiter } = opConfig;
 
     async function getMargin(offset, length) {
@@ -106,7 +105,7 @@ function getChunk(readerClient, slice, opConfig, metadata, logger) {
             }
             return toRecords(data);
         })
-        .then(data => chunkFormatter[opConfig.format](data, logger, metadata, opConfig));
+        .then(data => chunkFormatter[opConfig.format](data, logger, opConfig, metadata));
 }
 
 module.exports = {
